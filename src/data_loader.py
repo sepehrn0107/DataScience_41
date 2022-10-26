@@ -14,7 +14,7 @@ class DataLoader:
     def __init__(self, cfg):
         self.log_tag = "[Dataloader]"
         self.verbose = cfg.verbose
-        self.city = cfg.city.lower()
+        self.city = cfg.city
 
         # Cache data locally on disk to avoid network requests.
         self.cache = PersistentCache(self.city, self.verbose)
@@ -28,9 +28,9 @@ class DataLoader:
 
         if data is None:
             data = self.load_from_network()
-            self.cache.save(data)
+            assert data is not None, f"{self.log_tag}: ERROR: Could not load data."
 
-        assert data is not None, f"{self.log_tag}: ERROR: Could not load data."
+            self.cache.save(data)
 
         if self.verbose:
             print(f"{self.log_tag}: Loaded {len(data.listings)} listings")
@@ -38,7 +38,6 @@ class DataLoader:
             print(f"{self.log_tag}: Loaded {len(data.reviews)} reviews")
 
         return data
-
 
     def load_from_network(self) -> Data or None:
         gateway_url = get_gateway_url_from_city(self.city)
@@ -52,7 +51,6 @@ class DataLoader:
         if page_data_request.status_code != 200:
             print(f"{self.log_tag}: ERROR: Could not load data from network.")
             print(f"{self.log_tag}: Status code: {page_data_request.status_code}")
-            print(f"{self.log_tag}: Response: {page_data_request.text}")
             return None
 
         page_data = page_data_request.json()
@@ -93,8 +91,8 @@ class PersistentCache:
     def __init__(self, city: str, verbose: bool):
         self.log_tag = "[PersistentCache]"
         self.verbose = verbose
-        self.city = city
-        self.cache_directory = Path(f"../downloaded_data/{city}")
+        self.city = url_friendly_city_name(city) # let's not allowed weird folder names
+        self.cache_directory = Path(f"../downloaded_data/{self.city}")
 
     def load(self):
         if self.verbose:
@@ -123,6 +121,22 @@ class PersistentCache:
 
 
 
-
 def get_gateway_url_from_city(city: str) -> str:
-    return f'http://insideairbnb.com/page-data/{city}/page-data.json'
+    return f'http://insideairbnb.com/page-data/{url_friendly_city_name(city)}/page-data.json'
+
+# There are certain rules for city names on airbnb.
+# This functions tries to parse the config city name to the best of it's ability.
+def url_friendly_city_name(city: str) -> str:
+    # City must be lowercase
+    city = city.lower()
+
+    # "," is not allowed in the url, like 'Barwon South West, Vic' and is removed
+    city = city.replace(",", "")
+
+    # "." is not allowed in the url, like 'Washington, D.C.' and is removed
+    city = city.replace(".", "")
+
+    # Space is not allowed
+    city = city.replace(" ", "-")
+
+    return city
