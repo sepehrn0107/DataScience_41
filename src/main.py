@@ -16,7 +16,7 @@ def main():
         # To add a new module just copy the PrintData module and modify the "run" function.
     ])
 
-    pipe.run(cfg, data)
+    pipe.run(data)
 
 if __name__ == '__main__':
     main()

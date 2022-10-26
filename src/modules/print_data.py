@@ -3,8 +3,7 @@ from .base_module import BaseModule
 from data_loader import Data
 
 class PrintData(BaseModule):
-    # Additional constructor arguments can be added.
-    # self.cfg is not available in the constructor, but can be passed manually.
+    # Additional constructor arguments can be added, like config etc.
     def __init__(self):
         super().__init__()
 

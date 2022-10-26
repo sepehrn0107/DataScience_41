@@ -9,9 +9,8 @@ class Pipeline:
         self.modules = modules
         self.shared_data: Dict[str, Any] = {}
     
-    def run(self, cfg: Config, data: Data):
+    def run(self, data: Data):
         for module in self.modules:
-            module.set_config(cfg)
             module.run(data, self.shared_data)
         
         # Cleanup shared data after running all modules.
