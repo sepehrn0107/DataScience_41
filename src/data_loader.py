@@ -40,6 +40,7 @@ class DataLoader:
         return data
 
     def load_from_network(self) -> Data or None:
+        # the gateway url is a info page that contains the urls to the actual data
         gateway_url = get_gateway_url_from_city(self.city)
 
         if self.verbose:
