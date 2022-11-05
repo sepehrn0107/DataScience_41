@@ -130,3 +130,6 @@ dmypy.json
 
 # Let's not send our data over git
 downloaded_data
+
+# Thanks, Mac OS
+.DS_Store
