@@ -24,7 +24,7 @@ class ReviewSentiments(BaseModule):
         listing_ids = [x for x in listing_ids if "<br" not in x]
 
         for i, listing_id in enumerate(listing_ids):
-          percentage = (i / len(listing_ids)) * 100
+          percentage = ((i+1) / len(listing_ids)) * 100
           print(f"  Calculating review sentiments ({percentage:.2f}%)", end='\r')
 
           listing_reviews = data.reviews.loc[data.reviews['listing_id'] == listing_id]
