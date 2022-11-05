@@ -27,24 +27,25 @@ class ReviewSentiments(BaseModule):
           percentage = ((i+1) / len(listing_ids)) * 100
           print(f"  Calculating review sentiments ({percentage:.2f}%)", end='\r')
 
-          listing_reviews = data.reviews.loc[data.reviews['listing_id'] == listing_id]
-
           avg_sentiment = 0.0
           highest_sentiment = 0.0
           lowest_sentiment = 0.0
 
-          for review in listing_reviews['comments']:
-            if not isinstance(review, str):
-              continue
+          listing_reviews = data.reviews.loc[data.reviews['listing_id'] == listing_id]
 
+          # Only allow string values (some csv data is broken...)
+          valid_reviews = [r for r in listing_reviews['comments'] if isinstance(r, str)]
+
+          for review in valid_reviews:
             sentiment = self.get_sentiment(review)
+
             avg_sentiment += sentiment
             if sentiment > highest_sentiment:
               highest_sentiment = sentiment
             if sentiment < lowest_sentiment:
               lowest_sentiment = sentiment
 
-          avg_sentiment /= len(listing_reviews)
+          avg_sentiment /= len(valid_reviews)
 
           # TODO: Visualize the data
 
