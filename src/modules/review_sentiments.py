@@ -5,61 +5,27 @@ from data_loader import Data
 import re
 import math
 import nltk
-nltk.download('vader_lexicon', "stopwords")
+from nltk.sentiment import SentimentIntensityAnalyzer
+
+nltk.download('vader_lexicon', quiet=True)
 
 class ReviewSentiments(BaseModule):
     def __init__(self):
-        from nltk.sentiment import SentimentIntensityAnalyzer
         super().__init__()
 
-        self.stopwords = nltk.corpus.stopwords.words("english")
         self.analyzer = SentimentIntensityAnalyzer()
 
     def run(self, data: Data, shared_data: Dict[str, Any]):
-        listing_ids = data.reviews.listing_id.unique()
+        df = data.reviews
 
-        # Ughh... Some csv data is broken...
-        # Some records have text with multiline but does not include "" around the text...
-        # Let's naively remove those by checking <br (as it is often present).
-        listing_ids = [x for x in listing_ids if "<br" not in x]
+        print("Calculating review sentiments.")
+        df["sentiment"] = df.comments.swifter.apply(
+            lambda x: self.analyzer.polarity_scores(x)['compound']
+        )
 
-        for i, listing_id in enumerate(listing_ids):
-          percentage = ((i+1) / len(listing_ids)) * 100
-          print(f"  Calculating review sentiments ({percentage:.2f}%)", end='\r')
+        # Re-assigned to the data.reviews
+        data.reviews = df
+        
+        print(data.reviews)
 
-          avg_sentiment = 0.0
-          highest_sentiment = 0.0
-          lowest_sentiment = 0.0
-
-          listing_reviews = data.reviews.loc[data.reviews['listing_id'] == listing_id]
-
-          # Only allow string values (some csv data is broken...)
-          valid_reviews = [r for r in listing_reviews['comments'] if isinstance(r, str)]
-
-          for review in valid_reviews:
-            sentiment = self.get_sentiment(review)
-
-            avg_sentiment += sentiment
-            if sentiment > highest_sentiment:
-              highest_sentiment = sentiment
-            if sentiment < lowest_sentiment:
-              lowest_sentiment = sentiment
-
-          avg_sentiment /= len(valid_reviews)
-
-          # TODO: Visualize the data
-
-    def clean_review(self, review: str):
-      cleaned = review.lower()
-      cleaned = re.sub(r"(@\[A-Za-z0-9]+)|([^0-9A-Za-z \t])|(\w+:\/\/\S+)|^rt|http.+?", "", cleaned)
-
-      cleaned = cleaned.replace("<br>", " ")
-      cleaned = cleaned.replace("<br/>", " ")
-
-      cleaned = " ".join([w for w in cleaned.split() if w not in (self.stopwords)])
-
-      return cleaned
-
-    def get_sentiment(self, review: str):
-      cleaned_review = self.clean_review(review)
-      return self.analyzer.polarity_scores(cleaned_review)['compound']
+        #   # TODO: Visualize the data
