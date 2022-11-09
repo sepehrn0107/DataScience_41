@@ -29,23 +29,25 @@ class StaleListings(BaseModule):
         listings_with_low_future_availability = self.get_listings_with_low_future_availability(
             data.listings, data.calendars, months=1, threshold=0.1
         )
+        print(f"  Found {len(listings_with_low_future_availability)} listings with low future availability.")
+
 
         # Listings with no reviews the past "months"
         listings_with_no_recent_reviews = self.get_listings_with_no_recent_reviews(
             data.listings, data.reviews, months=3
         )
+        print(f"  Found {len(listings_with_no_recent_reviews)} listings with no recent reviews.")
 
         # Listings that over the last "months" have had a cancellation-to-review rate above the "threshold"
         listings_likely_to_cancel = self.get_listings_likely_to_cancel(
             data.listings, data.reviews, months=24, threshold=0.5
         )
+        print(f"  Found {len(listings_likely_to_cancel)} listings likely to cancel.")
 
         # TODO: Visualize the data
 
     # returns the listings that are not available for threshold % of the next 30 days
     def get_listings_with_low_future_availability(self, listings: pd.DataFrame, calendar: pd.DataFrame, months: int, threshold: float) -> pd.DataFrame:
-        print("  Finding low availability listings.")
-
         # local cleaning
         calendar["date"] = pd.to_datetime(calendar["date"])
         calendar["price"] = calendar["price"].str.replace(r"[$,]", "").astype(float)
@@ -66,14 +68,12 @@ class StaleListings(BaseModule):
 
 
     def get_listings_with_no_recent_reviews(self, listings: pd.DataFrame, reviews: pd.DataFrame, months: int):
-        print("  Finding listings with no recent reviews.")
         recent_reviews = self.get_recent_reviews(reviews, months)
 
         # Return listings that does not appear in recent_reviews
         return listings[~listings['id'].isin(recent_reviews['listing_id'])]
 
     def get_listings_likely_to_cancel(self, listings: pd.DataFrame, reviews: pd.DataFrame, months: int, threshold: float):
-        print("  Finding listings with cancellations.")
         recent_reviews = self.get_recent_reviews(reviews, months)
 
         # Get the number of cancellations for each listing

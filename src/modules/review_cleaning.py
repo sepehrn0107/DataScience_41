@@ -25,12 +25,6 @@ class ReviewCleaning(BaseModule):
 
         df = data.reviews
 
-        # Firstly, some of the csv data is broken...
-        # Some records have text with multiline but does not include "" around the text...
-        # Let's naively remove those by checking <br (as it is often present in these cases).
-        print("Removing broken records.")
-        df = df[df["listing_id"].str.contains("<br") == False]
-
         # Let's remove the reviews that are not strings.
         df = df[df.comments.swifter.progress_bar(
             desc="Removing non-string reviews"
