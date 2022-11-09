@@ -33,13 +33,16 @@ class ReviewCleaning(BaseModule):
 
         # Let's remove the reviews that are not strings.
         df = df[df.comments.swifter.progress_bar(
-            desc="Removing non-string reviews."
+            desc="Removing non-string reviews"
         ).apply(lambda x: isinstance(x, str))]
 
         # Clean the reviews (remove stop-words, symbols, etc.)
         df["comments"] = df.comments.swifter.progress_bar(
-            desc="Cleaning review text."
+            desc="Cleaning review text"
         ).apply(self.clean_review)
+
+        # Add correct types
+        df["date"] = pd.to_datetime(df["date"])
 
         # Re-assigned the cleaned data to the data.reviews
         data.reviews = df
