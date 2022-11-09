@@ -36,8 +36,9 @@ class ReviewCleaning(BaseModule):
         df = df[df.comments.apply(lambda x: isinstance(x, str))]
 
         # Clean the reviews (remove stop-words, symbols, etc.)
-        print("Cleaning review text.")
-        df["comments"] = df.comments.swifter.apply(self.clean_review)
+        df["comments"] = df.comments.swifter.progress_bar(
+            desc="Cleaning review text."
+        ).apply(self.clean_review)
 
         # Re-assigned the cleaned data to the data.reviews
         data.reviews = df
