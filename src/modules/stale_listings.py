@@ -1,8 +1,9 @@
-from typing import Dict, Any
-from .base_module import BaseModule
-from data_loader import Data
+from typing import Any, Dict
 
 import pandas as pd
+from data_loader import Data
+
+from .base_module import BaseModule
 
 # From trello:
 #
@@ -38,6 +39,8 @@ class StaleListings(BaseModule):
         listings_likely_to_cancel = self.get_listings_likely_to_cancel(
             data.listings, data.reviews, months=32, threshold=0.5
         )
+
+        # TODO: Visualize the data
 
     # returns the listings that are not available for threshold % of the next 30 days
     def get_listings_with_low_future_availability(self, listings: pd.DataFrame, calendar: pd.DataFrame, months: int, threshold: float) -> pd.DataFrame:
