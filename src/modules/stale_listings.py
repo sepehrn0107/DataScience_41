@@ -25,17 +25,17 @@ class StaleListings(BaseModule):
     def run(self, data: Data, shared_data: Dict[str, Any]):
         print("Finding stale listings.")
 
-        # Listings that are less than "threshold" available for the next N months
+        # Listings that are less than "threshold" available for the next "months"
         listings_with_low_future_availability = self.get_listings_with_low_future_availability(
             data.listings, data.calendars, months=1, threshold=0.1
         )
 
-        # Listings with no reviews the past N months
+        # Listings with no reviews the past "months"
         listings_with_no_recent_reviews = self.get_listings_with_no_recent_reviews(
             data.listings, data.reviews, months=3
         )
 
-        # Listings that over the last N months have had a cancellation-to-review rate above the threshold
+        # Listings that over the last "months" have had a cancellation-to-review rate above the "threshold"
         listings_likely_to_cancel = self.get_listings_likely_to_cancel(
             data.listings, data.reviews, months=24, threshold=0.5
         )
