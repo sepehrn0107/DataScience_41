@@ -26,6 +26,4 @@ class ReviewSentiments(BaseModule):
         # Re-assigned to the data.reviews
         data.reviews = df
         
-        print(data.reviews)
-
-        #   # TODO: Visualize the data
+        # TODO: Visualize the data
