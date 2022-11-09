@@ -67,20 +67,14 @@ class StaleListings(BaseModule):
 
     def get_listings_with_no_recent_reviews(self, listings: pd.DataFrame, reviews: pd.DataFrame, months: int):
         print("  Finding listings with no recent reviews.")
-
-        min_date = reviews['date'].max() - pd.DateOffset(months=months)
-
-        recent_reviews = reviews[reviews['date'] > min_date]
+        recent_reviews = self.get_recent_reviews(reviews, months)
 
         # Return listings that does not appear in recent_reviews
         return listings[~listings['id'].isin(recent_reviews['listing_id'])]
 
     def get_listings_likely_to_cancel(self, listings: pd.DataFrame, reviews: pd.DataFrame, months: int, threshold: float):
         print("  Finding listings with cancellations.")
-
-        min_date = reviews['date'].max() - pd.DateOffset(months=months)
-
-        recent_reviews = reviews[reviews['date'] > min_date]
+        recent_reviews = self.get_recent_reviews(reviews, months)
 
         # Get the number of cancellations for each listing
         num_reviews_per_listing = recent_reviews.groupby('listing_id').size()
@@ -92,3 +86,7 @@ class StaleListings(BaseModule):
 
         # Return listings with cancellation rates above the threshold
         return listings[listings['id'].isin(cancellation_rates[cancellation_rates >= threshold].index)]
+
+    def get_recent_reviews(self, reviews: pd.DataFrame, months: int) -> pd.DataFrame:
+        min_date = reviews['date'].max() - pd.DateOffset(months=months)
+        return reviews[reviews['date'] > min_date]
