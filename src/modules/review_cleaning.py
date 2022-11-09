@@ -32,8 +32,9 @@ class ReviewCleaning(BaseModule):
         df = df[df["listing_id"].str.contains("<br") == False]
 
         # Let's remove the reviews that are not strings.
-        print("Removing non-string reviews.")
-        df = df[df.comments.apply(lambda x: isinstance(x, str))]
+        df = df[df.comments.swifter.progress_bar(
+            desc="Removing non-string reviews."
+        ).apply(lambda x: isinstance(x, str))]
 
         # Clean the reviews (remove stop-words, symbols, etc.)
         df["comments"] = df.comments.swifter.progress_bar(
