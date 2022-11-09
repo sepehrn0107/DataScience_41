@@ -42,6 +42,7 @@ class ReviewCleaning(BaseModule):
         ).apply(self.clean_review)
 
         # Add correct types
+        df['listing_id'] = df['listing_id'].astype('int')
         df["date"] = pd.to_datetime(df["date"])
 
         # Re-assigned the cleaned data to the data.reviews
