@@ -35,7 +35,7 @@ class StaleListings(BaseModule):
             data.listings, data.reviews, months=3
         )
 
-        # Listings that over the last N months have had a cancellation rate above the threshold
+        # Listings that over the last N months have had a cancellation-to-review rate above the threshold
         listings_likely_to_cancel = self.get_listings_likely_to_cancel(
             data.listings, data.reviews, months=32, threshold=0.5
         )
