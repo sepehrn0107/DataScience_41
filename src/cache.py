@@ -3,8 +3,8 @@ import pickle
 
 
 class Cache:
-    def __init__(self, key, update_function):
-        self.key = key
+    def __init__(self, city, key, update_function):
+        self.key = f"{key}-{city}"
         self.cache_dir = "_cache"
         self.update_function = update_function
 
@@ -18,7 +18,6 @@ class Cache:
             with open(cache_file, "rb") as f:
                 return pickle.load(f)
 
-        print(f"Updating {cache_file} cache")
         data = self.update_function()
         pickle.dump(data, open(cache_file, "wb"))
 

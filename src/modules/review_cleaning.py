@@ -44,7 +44,7 @@ class ReviewCleaning(BaseModule):
 
             return df
 
-        data.reviews = Cache("test", generate_data).get()
+        data.reviews = Cache(data.city, "ReviewCleaning", generate_data).get()
 
     def clean_review(self, review: str):
         cleaned = review.lower()
