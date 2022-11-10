@@ -130,6 +130,8 @@ dmypy.json
 
 # Let's not send our data over git
 downloaded_data
+_cache
+plots
 
 # Thanks, Mac OS
 .DS_Store
@@ -137,4 +139,3 @@ downloaded_data
 # Thanks for adding this nltk...
 stopwords
 .zip
-_cache
