@@ -1,3 +1,4 @@
+import random
 from typing import Dict, Any
 from .base_module import BaseModule
 from data_loader import Data
@@ -5,6 +6,8 @@ from data_loader import Data
 import pandas as pd
 from durations_nlp import Duration
 import spacy
+
+from cache import Cache
 
 
 class StayDurations(BaseModule):
@@ -43,16 +46,25 @@ class StayDurations(BaseModule):
         }
 
     def run(self, data: Data, shared_data: Dict[str, Any]):
-        df = data.reviews
+        def gen_data():
+            df = data.reviews
 
-        df["nights"] = df.comments.swifter.progress_bar(
-            desc="Calculating nights stayed fromm reviews"
-        ).apply(lambda x: self.get_nights(x))
+            df["nights"] = df.comments.swifter.progress_bar(
+                desc="Calculating nights stayed fromm reviews"
+            ).apply(lambda x: self.get_nights(x))
+
+            night_distribution = self.get_night_distribution(df)
+
+            df["estimated_nights"] = random.choices(
+                list(night_distribution.keys()),
+                weights=night_distribution.values(),
+                k=len(df),
+            )
+
+            return df
 
         # Re-assigned to the data.reviews
-        data.reviews = df
-
-        shared_data["night_distribution"] = self.get_night_distribution(df)
+        data.reviews = Cache(data.city, "StayDuration", gen_data).get()
 
         # TODO: Visualize the data=
 
