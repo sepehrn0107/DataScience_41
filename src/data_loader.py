@@ -4,13 +4,16 @@ import io
 import pandas as pd
 from pathlib import Path
 
+
 class Data:
-    def __init__(self, listings, calendars, reviews):
+    def __init__(self, city: str, listings, calendars, reviews):
+        self.city = city
         self.listings = listings
         self.calendars = calendars
         self.reviews = reviews
 
-class DataLoader:  
+
+class DataLoader:
     def __init__(self, cfg):
         self.log_tag = "[Dataloader]"
         self.verbose = cfg.verbose
@@ -21,7 +24,6 @@ class DataLoader:
 
         print(f"{self.log_tag}: Data target: '{self.city}'.")
 
-  
     def load(self) -> Data:
         print(f"{self.log_tag}: Loading data.")
         data = self.cache.load()
@@ -55,7 +57,7 @@ class DataLoader:
             return None
 
         page_data = page_data_request.json()
-        
+
         listings_url: str = page_data["result"]["pageContext"]["listingsData"]
 
         # Change 'visualisations' to 'data' to be compliant with the other csv file urls
@@ -74,7 +76,7 @@ class DataLoader:
         calendars_data = self.download_and_unzip_data("calendars", calendar_url)
         reviews_data = self.download_and_unzip_data("reviews", reviews_url)
 
-        return Data(listings_data, calendars_data, reviews_data)
+        return Data(self.city, listings_data, calendars_data, reviews_data)
 
     def download_and_unzip_data(self, tag: str, url: str):
         if self.verbose:
@@ -86,13 +88,12 @@ class DataLoader:
                 text = f.read()
                 return pd.read_csv(io.BytesIO(text))
 
-        
 
 class PersistentCache:
     def __init__(self, city: str, verbose: bool):
         self.log_tag = "[PersistentCache]"
         self.verbose = verbose
-        self.city = url_friendly_city_name(city) # let's not allowed weird folder names
+        self.city = url_friendly_city_name(city)  # let's not allowed weird folder names
         self.cache_directory = Path(f"../downloaded_data/{self.city}")
 
     def load(self):
@@ -103,12 +104,12 @@ class PersistentCache:
             if self.verbose:
                 print(f"{self.log_tag}: Cache miss.")
             return None
-            
+
         listings = pd.read_csv(f"{self.cache_directory}/listings.csv")
         calendars = pd.read_csv(f"{self.cache_directory}/calendars.csv")
         reviews = pd.read_csv(f"{self.cache_directory}/reviews.csv")
-        
-        return Data(listings, calendars, reviews)
+
+        return Data(self.city, listings, calendars, reviews)
 
     def save(self, data: Data):
         if self.verbose:
@@ -121,9 +122,9 @@ class PersistentCache:
         data.reviews.to_csv(f"{self.cache_directory}/reviews.csv", index=False)
 
 
-
 def get_gateway_url_from_city(city: str) -> str:
-    return f'http://insideairbnb.com/page-data/{url_friendly_city_name(city)}/page-data.json'
+    return f"http://insideairbnb.com/page-data/{url_friendly_city_name(city)}/page-data.json"
+
 
 # There are certain rules for city names on airbnb.
 # This functions tries to parse the config city name to the best of it's ability.
