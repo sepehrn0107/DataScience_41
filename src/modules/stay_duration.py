@@ -60,9 +60,7 @@ class StayDurations(BaseModule):
         doc = self.nlp(text)
         for ent in doc.ents:
             if ent.label_ == "DATE":
-
-                tt = self.text_to_days(ent.text)
-                return tt
+                return self.text_to_days(ent.text)
         return None
 
     def text_to_days(self, text: str):
@@ -87,7 +85,6 @@ class StayDurations(BaseModule):
             return None
 
         days = duration.to_days()
-
         if days < 2 or days > 200:
             return None
 

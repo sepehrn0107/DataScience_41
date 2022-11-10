@@ -16,8 +16,8 @@ def main():
     pipe = Pipeline([
         modules.PrintData(),
         modules.ReviewCleaning(),
-        # modules.ReviewSentiments(),
-        # modules.StaleListings(),
+        modules.ReviewSentiments(),
+        modules.StaleListings(),
         modules.StayDurations(),
         # Add modules to run in sequence.
         # To add a new module just copy the PrintData module and modify the "run" function.
