@@ -133,3 +133,7 @@ downloaded_data
 
 # Thanks, Mac OS
 .DS_Store
+
+# Thanks for adding this nltk...
+stopwords
+.zip
