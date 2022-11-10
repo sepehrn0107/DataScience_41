@@ -2,6 +2,8 @@ from typing import Dict, Any
 from .base_module import BaseModule
 from data_loader import Data
 
+from cache import Cache
+
 import re
 import pandas as pd
 import swifter
@@ -23,24 +25,26 @@ class ReviewCleaning(BaseModule):
     def run(self, data: Data, shared_data: Dict[str, Any]):
         print("Cleaning reviews.")
 
-        df = data.reviews
+        def generate_data():
+            df = data.reviews
 
-        # Let's remove the reviews that are not strings.
-        df = df[df.comments.swifter.progress_bar(
-            desc="Removing non-string reviews"
-        ).apply(lambda x: isinstance(x, str))]
+            # Let's remove the reviews that are not strings.
+            df = df[df.comments.swifter.progress_bar(
+                desc="Removing non-string reviews"
+            ).apply(lambda x: isinstance(x, str))]
 
-        # Clean the reviews (remove stop-words, symbols, etc.)
-        df["comments"] = df.comments.swifter.progress_bar(
-            desc="Cleaning review text"
-        ).apply(self.clean_review)
+            # Clean the reviews (remove stop-words, symbols, etc.)
+            df["comments"] = df.comments.swifter.progress_bar(
+                desc="Cleaning review text"
+            ).apply(self.clean_review)
 
-        # Add correct types
-        df['listing_id'] = df['listing_id'].astype('int')
-        df["date"] = pd.to_datetime(df["date"])
+            # Add correct types
+            df['listing_id'] = df['listing_id'].astype('int')
+            df["date"] = pd.to_datetime(df["date"])
 
-        # Re-assigned the cleaned data to the data.reviews
-        data.reviews = df
+            return df
+
+        data.reviews = Cache("test", generate_data).get()
 
     def clean_review(self, review: str):
         cleaned = review.lower()
