@@ -2,6 +2,7 @@ from typing import Dict, Any
 from .base_module import BaseModule
 from data_loader import Data
 
+import pandas as pd
 from durations_nlp import Duration
 import spacy
 
@@ -44,16 +45,18 @@ class StayDurations(BaseModule):
     def run(self, data: Data, shared_data: Dict[str, Any]):
         df = data.reviews
 
-        df["duration"] = df.comments.swifter.progress_bar(
-            desc="Calculating stay duration"
-        ).apply(lambda x: self.get_duration(x))
+        df["nights"] = df.comments.swifter.progress_bar(
+            desc="Calculating nights stayed fromm reviews"
+        ).apply(lambda x: self.get_nights(x))
 
         # Re-assigned to the data.reviews
         data.reviews = df
 
+        shared_data["night_distribution"] = self.get_night_distribution(df)
+
         # TODO: Visualize the data=
 
-    def get_duration(self, text):
+    def get_nights(self, text):
         if "automated" in text:
             return None
 
@@ -88,7 +91,7 @@ class StayDurations(BaseModule):
         if days < 2 or days > 200:
             return None
 
-        return days
+        return int(days)
 
     def fix_text(self, text: str):
         text = text.lower()
@@ -100,3 +103,7 @@ class StayDurations(BaseModule):
             text = text.replace(k, v)
 
         return text
+
+    def get_night_distribution(self, df: pd.DataFrame):
+        df = df.dropna(subset=["nights"])
+        return df.nights.groupby(df.nights).count().to_dict()
