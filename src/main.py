@@ -17,6 +17,7 @@ def main():
         modules.PrintData(),
         modules.ReviewCleaning(),
         modules.ReviewSentiments(),
+        modules.StaleListings(),
         # Add modules to run in sequence.
         # To add a new module just copy the PrintData module and modify the "run" function.
     ])

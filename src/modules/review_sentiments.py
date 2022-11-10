@@ -19,7 +19,7 @@ class ReviewSentiments(BaseModule):
         df = data.reviews
 
         df["sentiment"] = df.comments.swifter.progress_bar(
-            desc="Calculating review sentiments."
+            desc="Calculating review sentiments"
         ).apply(lambda x: self.analyzer.polarity_scores(x)['compound'])
 
         # Re-assigned to the data.reviews
