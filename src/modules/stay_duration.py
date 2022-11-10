@@ -44,21 +44,14 @@ class StayDurations(BaseModule):
     def run(self, data: Data, shared_data: Dict[str, Any]):
         df = data.reviews
 
-        # df["duration"] = df.comments.swifter.progress_bar(
-        #     desc="Calculating stay duration"
-        # ).apply(lambda x: self.get_duration(x))
-
-        df["duration"] = df.comments.apply(lambda x: self.get_duration(x))
+        df["duration"] = df.comments.swifter.progress_bar(
+            desc="Calculating stay duration"
+        ).apply(lambda x: self.get_duration(x))
 
         # Re-assigned to the data.reviews
         data.reviews = df
 
-        reviews_with_duration = df[df["duration"].notna()]
-
-        # save data.reviews to csv
-        reviews_with_duration.to_csv("reviews_extra.csv")
-
-        # TODO: Visualize the data
+        # TODO: Visualize the data=
 
     def get_duration(self, text):
         if "automated" in text:
