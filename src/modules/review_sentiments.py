@@ -60,6 +60,12 @@ class ReviewSentiments(BaseModule):
 
         merged["minimum_nights"] = merged["minimum_nights"].astype(float)
 
+        # drop rows where host_acceptance_rate is NaN
+        merged = merged[merged["host_acceptance_rate"].notna()]
+        merged["host_acceptance_rate"] = (
+            merged["host_acceptance_rate"].str.replace(r"[%]", "").astype(int)
+        )
+
         # plot histogram
         reviews["sentiment"].hist(bins=100, figsize=(10, 5)).get_figure().savefig(
             plot_path(data.city, "review_sentiment_distribution")
@@ -78,14 +84,64 @@ class ReviewSentiments(BaseModule):
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_room_type"))
         plt.close()
 
-        # plot sentiment vs location
-        merged.plot.scatter(
+        # plot sentiment vs bedrooms
+        merged.groupby("bedrooms").sentiment.mean().plot.bar(
+            yerr=merged.groupby("bedrooms").sentiment.std(), capsize=4, rot=0
+        ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_bedrooms"))
+        plt.close()
+
+        # plot sentiment vs beds
+        merged.groupby("beds").sentiment.mean().plot.bar(
+            yerr=merged.groupby("beds").sentiment.std(), capsize=4, rot=0
+        ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_beds"))
+        plt.close()
+
+        # plot sentiment vs neighbourhood_cleansed
+        merged.groupby("neighbourhood_cleansed").sentiment.mean().plot.barh(
+            xerr=merged.groupby("neighbourhood_cleansed").sentiment.std(),
+            capsize=4,
+            rot=0,
+            figsize=(12, 8),
+        ).get_figure().savefig(
+            plot_path(data.city, "review_sentiment_vs_neighbourhood")
+        )
+        plt.close()
+
+        # plot sentiment vs instant_bookable
+        merged.groupby("instant_bookable").sentiment.mean().plot.bar(
+            yerr=merged.groupby("instant_bookable").sentiment.std(), capsize=4, rot=0
+        ).get_figure().savefig(
+            plot_path(data.city, "review_sentiment_vs_instant_bookable")
+        )
+        plt.close()
+
+        # plot sentiment vs accommodates
+        merged.groupby("accommodates").sentiment.mean().plot.bar(
+            yerr=merged.groupby("accommodates").sentiment.std(),
+            capsize=4,
+            rot=0,
+            figsize=(12, 5),
+        ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_accommodates"))
+        plt.close()
+
+        # plot sentiment vs min nights
+        merged.groupby("minimum_nights").sentiment.mean().plot.line(
             x="minimum_nights",
             y="sentiment",
             logx=True,
             figsize=(20, 10),
         ).get_figure().savefig(
             plot_path(data.city, "review_sentiment_vs_minimum_nights")
+        )
+        plt.close()
+
+        # plot sentiment vs host acceptance rate
+        merged.groupby("host_acceptance_rate").sentiment.mean().plot.line(
+            x="host_acceptance_rate",
+            y="sentiment",
+            figsize=(10, 5),
+        ).get_figure().savefig(
+            plot_path(data.city, "review_sentiment_vs_host_acceptance_rate")
         )
         plt.close()
 
