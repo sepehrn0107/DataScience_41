@@ -6,7 +6,7 @@ from cache import Cache
 
 from plotting import plot_path
 
-from matplotlib import cm
+from matplotlib import cm, pyplot as plt
 import pandas as pd
 import nltk
 from nltk.sentiment import SentimentIntensityAnalyzer
@@ -39,12 +39,7 @@ class ReviewSentiments(BaseModule):
         reviews = data.reviews
         listings = data.listings
 
-        # plot the distribution of sentiments
-        reviews["sentiment"].hist(bins=100, figsize=(10, 5)).get_figure().savefig(
-            plot_path(data.city, "review_sentiment_distribution")
-        )
-
-        # plot sentiment vs price
+        # Merge and process data
         avg_sentiments_per_listing = (
             reviews.groupby("listing_id").sentiment.mean().reset_index()
         )
@@ -61,13 +56,38 @@ class ReviewSentiments(BaseModule):
 
         merged = merged[merged["latitude"] < 90]
         merged = merged[merged["longitude"] < 180]
-
-        # sort by sentiment
         merged = merged.sort_values(by="sentiment", ascending=False)
 
+        merged["minimum_nights"] = merged["minimum_nights"].astype(float)
+
+        # plot histogram
+        reviews["sentiment"].hist(bins=100, figsize=(10, 5)).get_figure().savefig(
+            plot_path(data.city, "review_sentiment_distribution")
+        )
+        plt.close()
+
+        # plot sentiment vs price
         merged.plot.scatter(
             x="price", y="sentiment", figsize=(10, 10), logx=True
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_price"))
+        plt.close()
+
+        # plot sentiment vs room type
+        merged.groupby("room_type").sentiment.mean().plot.bar(
+            yerr=merged.groupby("room_type").sentiment.std(), capsize=4, rot=0
+        ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_room_type"))
+        plt.close()
+
+        # plot sentiment vs location
+        merged.plot.scatter(
+            x="minimum_nights",
+            y="sentiment",
+            logx=True,
+            figsize=(20, 10),
+        ).get_figure().savefig(
+            plot_path(data.city, "review_sentiment_vs_minimum_nights")
+        )
+        plt.close()
 
         # plot sentiment vs location
         merged.plot.scatter(
@@ -78,3 +98,4 @@ class ReviewSentiments(BaseModule):
             cmap=cm.get_cmap("cool_r"),
             figsize=(10, 10),
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_location"))
+        plt.close()
