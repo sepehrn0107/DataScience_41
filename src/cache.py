@@ -4,7 +4,7 @@ import pickle
 
 class Cache:
     def __init__(self, city, key, update_function):
-        self.key = f"{key}-{city}"
+        self.key = f"{key}-{city}".lower()
         self.cache_dir = "_cache"
         self.update_function = update_function
 
