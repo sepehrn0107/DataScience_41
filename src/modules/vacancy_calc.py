@@ -12,9 +12,9 @@ class CalculateVacancy(BaseModule):
         pass
 
     def run(self, data: Data, shared_data: Dict[str, Any]):
-        df = data.reviews.copy()
-
-        lst_id_to_occupancy = df.groupby("listing_id").days_occupied.sum().reset_index()
+        lst_id_to_occupancy = (
+            data.reviews.groupby("listing_id").days_occupied.sum().reset_index()
+        )
 
         df = data.listings.copy()
 
