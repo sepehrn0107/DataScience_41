@@ -151,7 +151,7 @@ class ReviewSentiments(BaseModule):
             y="latitude",
             s=8,
             c="sentiment",
-            cmap=cm.get_cmap("cool_r"),
+            cmap="cool_r",
             figsize=(10, 10),
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_location"))
         plt.close()
