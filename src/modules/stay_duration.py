@@ -50,7 +50,7 @@ class StayDurations(BaseModule):
             df = data.reviews
 
             df["nights"] = df.comments.swifter.progress_bar(
-                desc="Calculating nights stayed fromm reviews"
+                desc="Calculating nights stayed from reviews"
             ).apply(lambda x: self.get_nights(x))
 
             return df

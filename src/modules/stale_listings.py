@@ -310,7 +310,7 @@ class StaleListings(BaseModule):
         plt.close()
 
         # Plot the characteristics against host_acceptance_rate
-        df.groupby("host_acceptance_rate").has_low_future_availability.mean().plot.bar(
+        df.groupby("host_acceptance_rate").has_low_future_availability.mean().plot.line(
             figsize=(12, 8),
         ).get_figure().savefig(
             plot_path(
@@ -319,7 +319,7 @@ class StaleListings(BaseModule):
             )
         )
         plt.close()
-        df.groupby("host_acceptance_rate").has_no_recent_reviews.mean().plot.bar(
+        df.groupby("host_acceptance_rate").has_no_recent_reviews.mean().plot.line(
             figsize=(12, 8),
         ).get_figure().savefig(
             plot_path(
@@ -327,7 +327,7 @@ class StaleListings(BaseModule):
             )
         )
         plt.close()
-        df.groupby("host_acceptance_rate").is_likely_to_cancel.mean().plot.bar(
+        df.groupby("host_acceptance_rate").is_likely_to_cancel.mean().plot.line(
             figsize=(12, 8),
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_host_acceptance_rate")
@@ -340,7 +340,7 @@ class StaleListings(BaseModule):
         ).get_figure().savefig(
             plot_path(
                 data.city,
-                "listings_with_low_future_availability_vs_vacancy_percent",
+                "listings_with_low_future_availability_vs_vacancy",
             )
         )
         plt.close()
@@ -349,7 +349,7 @@ class StaleListings(BaseModule):
         ).get_figure().savefig(
             plot_path(
                 data.city,
-                "listings_with_no_recent_reviews_vs_vacancy_percent",
+                "listings_with_no_recent_reviews_vs_vacancy",
             )
         )
         plt.close()
@@ -358,7 +358,7 @@ class StaleListings(BaseModule):
         ).get_figure().savefig(
             plot_path(
                 data.city,
-                "listings_likely_to_cancel_vs_vacancy_percent",
+                "listings_likely_to_cancel_vs_vacancy",
             )
         )
         plt.close()
