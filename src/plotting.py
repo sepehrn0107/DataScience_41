@@ -3,7 +3,7 @@ import os
 
 def plot_path(city: str, name: str) -> str:
     # This is run from src
-    path = f"../plots/{city}/{name}"
+    path = f"../plots/{city}/{name}".lower().replace(" ", "_")
 
     if "." not in path:
         path += ".png"

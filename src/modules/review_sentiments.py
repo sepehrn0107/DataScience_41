@@ -36,8 +36,8 @@ class ReviewSentiments(BaseModule):
         self.plot(data)
 
     def plot(self, data: Data):
-        reviews = data.reviews
-        listings = data.listings
+        reviews = data.reviews.copy()
+        listings = data.listings.copy()
 
         # Merge and process data
         avg_sentiments_per_listing = (
@@ -154,4 +154,13 @@ class ReviewSentiments(BaseModule):
             cmap="cool_r",
             figsize=(10, 10),
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_location"))
+        plt.close()
+
+        # plot sentiment vs vacancy percent
+        merged.plot.scatter(
+            x="vacancy_percent",
+            y="sentiment",
+            figsize=(10, 5),
+            alpha=0.3,
+        ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_vacancy"))
         plt.close()
