@@ -4,6 +4,7 @@ from data_loader import Data
 from .base_module import BaseModule
 
 import numpy as np
+import pandas as pd
 
 
 class CalculateVacancy(BaseModule):
@@ -13,23 +14,27 @@ class CalculateVacancy(BaseModule):
     def run(self, data: Data, shared_data: Dict[str, Any]):
         df = data.reviews.copy()
 
-        df["days_occupied"] = df["nights"].combine_first(df["estimated_nights"])
+        lst_id_to_occupancy = df.groupby("listing_id").days_occupied.sum().reset_index()
 
-        df_a = df.groupby("listing_id").days_occupied.sum().reset_index()
-        df_b = df.groupby("listing_id").date.min().reset_index()
-        df_c = df.groupby("listing_id").date.max().reset_index()
+        df = data.listings.copy()
 
-        df = df_a
+        df["last_review"] = pd.to_datetime(df["last_review"], errors="coerce")
+        df["first_review"] = pd.to_datetime(df["first_review"], errors="coerce")
 
-        df["days_listed"] = df_c.date - df_b.date
-
+        df["days_listed"] = df["last_review"] - df["first_review"]
         df["days_listed"] = df["days_listed"].dt.days
 
-        df["days_listed"] = df[["days_occupied", "days_listed"]].max(axis=1)
+        df = df.merge(
+            lst_id_to_occupancy.rename(columns={"listing_id": "id"}),
+            on="id",
+            how="left",
+        )
 
-        df["vacancy_percent"] = df["days_occupied"] / df["days_listed"]
+        df["days_occupied"] = df[["days_occupied", "days_listed"]].min(axis=1)
 
-        data.listings["vacancy_percent"] = df["vacancy_percent"]
+        df["occupancy_percent"] = df["days_occupied"] / df["days_listed"]
+
+        data.listings["vacancy_percent"] = 1 - df["occupancy_percent"]
 
         print(data.listings)
 

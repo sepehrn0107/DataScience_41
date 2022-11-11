@@ -2,8 +2,12 @@ from config import Config
 from setup import setup
 from data_loader import DataLoader
 from pipeline import Pipeline
+import random
 
 import modules
+
+
+random.seed(1337)
 
 
 def main():

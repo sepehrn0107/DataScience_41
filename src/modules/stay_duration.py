@@ -53,18 +53,22 @@ class StayDurations(BaseModule):
                 desc="Calculating nights stayed fromm reviews"
             ).apply(lambda x: self.get_nights(x))
 
-            night_distribution = self.get_night_distribution(df)
-
-            df["estimated_nights"] = random.choices(
-                list(night_distribution.keys()),
-                weights=night_distribution.values(),
-                k=len(df),
-            )
-
             return df
 
         # Re-assigned to the data.reviews
         data.reviews = Cache(data.city, "StayDuration", gen_data).get()
+
+        night_distribution = self.get_night_distribution(data.reviews)
+
+        data.reviews["estimated_nights"] = random.choices(
+            list(night_distribution.keys()),
+            weights=night_distribution.values(),
+            k=len(data.reviews),
+        )
+
+        data.reviews["days_occupied"] = data.reviews["nights"].combine_first(
+            data.reviews["estimated_nights"]
+        )
 
         # TODO: Visualize the data=
 
