@@ -20,6 +20,7 @@ def main():
             modules.ReviewSentiments(),
             modules.StaleListings(),
             modules.StayDurations(),
+            modules.CalculateVacancy(),
             # Add modules to run in sequence.
             # To add a new module just copy the PrintData module and modify the "run" function.
         ]
