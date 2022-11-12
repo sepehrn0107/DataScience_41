@@ -7,6 +7,9 @@ import pandas as pd
 from durations_nlp import Duration
 import spacy
 
+import matplotlib.pyplot as plt
+from plotting import plot_path
+
 from cache import Cache
 
 
@@ -59,6 +62,9 @@ class StayDurations(BaseModule):
         data.reviews = Cache(data.city, "StayDuration", gen_data).get()
 
         night_distribution = self.get_night_distribution(data.reviews)
+
+        # Lets plot for the report
+        self.plot_night_distribution(data.city, night_distribution)
 
         data.reviews["estimated_nights"] = random.choices(
             list(night_distribution.keys()),
@@ -123,3 +129,10 @@ class StayDurations(BaseModule):
     def get_night_distribution(self, df: pd.DataFrame):
         df = df.dropna(subset=["nights"])
         return df.nights.groupby(df.nights).count().to_dict()
+
+    def plot_night_distribution(self, city: str, probs: Dict[int, float]):
+        fig, ax = plt.subplots()
+        ax.bar(probs.keys(), probs.values())
+        ax.set_xscale("log")
+        plt.savefig(plot_path(city, "night_distribution.png"))
+        plt.close()
