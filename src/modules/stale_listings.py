@@ -6,7 +6,7 @@ from data_loader import Data
 from .base_module import BaseModule
 
 from plotting import plot_path
-from matplotlib import cm, pyplot as plt
+import matplotlib.pyplot as plt
 
 
 # From trello:

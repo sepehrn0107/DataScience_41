@@ -25,6 +25,7 @@ def main():
             modules.CalculateVacancy(),
             modules.ReviewSentiments(),
             modules.StaleListings(),
+            modules.ListingInfoPlots(),
             # Add modules to run in sequence.
             # To add a new module just copy the PrintData module and modify the "run" function.
         ]
