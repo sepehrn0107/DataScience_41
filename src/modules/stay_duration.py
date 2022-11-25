@@ -76,7 +76,7 @@ class StayDurations(BaseModule):
             data.reviews["estimated_nights"]
         )
 
-        # TODO: Visualize the data=
+        # TODO: Visualize the data
 
     def get_nights(self, text):
         if "automated" in text:
@@ -136,3 +136,4 @@ class StayDurations(BaseModule):
         ax.set_xscale("log")
         plt.savefig(plot_path(city, "night_distribution.png"))
         plt.close()
+        # where do we can change the color?

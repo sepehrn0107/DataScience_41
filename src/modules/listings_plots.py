@@ -48,6 +48,9 @@ class ListingInfoPlots(BaseModule):
         listings.plot.scatter(
             x="host_response_rate",
             y="vacancy_percent",
+            ylabel="vacancy",
+            xlabel="host response rate",
+            color='#FF5A60',
             figsize=(12, 8),
         ).get_figure().savefig(
             plot_path(
@@ -61,6 +64,9 @@ class ListingInfoPlots(BaseModule):
         listings.plot.scatter(
             x="host_acceptance_rate",
             y="vacancy_percent",
+            ylabel="vacancy",
+            xlabel="host acceptance rate",
+            color='#FF5A60',
             figsize=(12, 8),
         ).get_figure().savefig(
             plot_path(
@@ -73,51 +79,89 @@ class ListingInfoPlots(BaseModule):
         # Plot the vacancy against neighbourhood
         listings.groupby("neighbourhood_cleansed").vacancy_percent.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="neighbourhood",
+            ylabel="neighbourhood",
+            xlabel="vacancy"
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_neighbourhood"))
         plt.close()
 
         # Plot the vacancy against room_type
         listings.groupby("room_type").vacancy_percent.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="room type",
+            ylabel="room type",
+            xlabel="vacancy"
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_room_type"))
         plt.close()
 
         # Plot the vacancy against instant_bookable
         listings.groupby("instant_bookable").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="instant_bookable",
+            xlabel="instant bookable",
+            ylabel="vacancy"
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_instant_bookable"))
         plt.close()
 
         # Plot the vacancy against accommodates
         listings.groupby("accommodates").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="accommodates",
+            ylabel="vacancy",
+            xlabel="accommodates"
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_accommodates"))
         plt.close()
 
         # Plot the vacancy against bedrooms
         listings.groupby("bedrooms").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="bedrooms",
+            ylabel="vacancy",
+            xlabel="bedrooms"
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_bedrooms"))
         plt.close()
 
         # Plot the vacancy against beds
         listings.groupby("beds").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="beds",
+            ylabel="vacancy",
+            xlabel="beds",
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_beds"))
         plt.close()
 
         # Plot the vacancy against price
         listings.plot.scatter(
             x="price",
+            color='#FF5A60',
             y="vacancy_percent",
             logx=True,
             figsize=(12, 8),
+            ylabel="vacancy",
+            xlabel="price",
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_price"))
         plt.close()
 
         # Plot the vacancy against host_is_superhost
         listings.groupby("host_is_superhost").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            x="vacancy",
+            y="host_is_superhost",
+            xlabel="host is superhost",
+            ylabel="vacancy",
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_host_is_superhost"))
         plt.close()
 
@@ -125,6 +169,8 @@ class ListingInfoPlots(BaseModule):
         listings.plot.scatter(
             x="longitude",
             y="latitude",
+            xlabel="longitude",
+            ylabel="latitude",
             s=8,
             c="vacancy_percent",
             cmap="cool_r",
@@ -135,7 +181,10 @@ class ListingInfoPlots(BaseModule):
         # plot vacancy vs min nights
         listings.groupby("minimum_nights").vacancy_percent.mean().plot.line(
             x="minimum_nights",
+            color='#FF5A60',
             y="vacancy_percent",
+            xlabel="minimum nights",
+            ylabel="vacancy",
             logx=True,
             figsize=(20, 10),
         ).get_figure().savefig(plot_path(data.city, "vacancy_vs_minimum_nights"))
@@ -152,7 +201,10 @@ class ListingInfoPlots(BaseModule):
         ]:
             listings.plot.scatter(
                 x=col,
+                xlabel=col.replace("_", " "),
+                ylabel="vacancy",
                 y="vacancy_percent",
                 figsize=(15, 10),
-            ).get_figure().savefig(plot_path(data.city, f"vacancy_vs_{col}"))
+                color='#FF5A60',
+            ).get_figure().savefig(plot_path(data.city, f"vacancy_vs_{col}.svg"))
             plt.close()

@@ -141,26 +141,30 @@ class StaleListings(BaseModule):
         plt.figure(figsize=(5, 5))
         plt.pie(
             [len(listings_with_low_future_availability), len(df)],
-            colors=["blue", "gray"],
-            autopct="%1.1f%%",
+            colors=["#FF5A60", "gray"],
+            labels=("low", "high"),
+            autopct="%1.1f%%"
         )
-        plt.savefig(plot_path(data.city, "listings_with_low_future_availability.png"))
+        plt.savefig(plot_path(data.city, "listings_with_low_future_availability"))
         plt.close()
         plt.figure(figsize=(5, 5))
         plt.pie(
             [len(listings_with_no_recent_reviews), len(df)],
-            colors=["blue", "gray"],
+            colors=["#FF5A60", "gray"],
             autopct="%1.1f%%",
+            labels=("without reviews", "with reviews")
         )
-        plt.savefig(plot_path(data.city, "listings_with_no_recent_reviews.png"))
+        plt.savefig(plot_path(data.city, "listings_with_no_recent_reviews"))
         plt.close()
+
         plt.figure(figsize=(5, 5))
         plt.pie(
             [len(listings_likely_to_cancel), len(df)],
-            colors=["blue", "gray"],
+            colors=["#FF5A60", "gray"],
             autopct="%1.1f%%",
+
         )
-        plt.savefig(plot_path(data.city, "listings_likely_to_cancel.png"))
+        plt.savefig(plot_path(data.city, "listings_likely_to_cancel"))
         plt.close()
 
         # set 0 or 1 for each listing for each characteristic if exists
@@ -186,6 +190,9 @@ class StaleListings(BaseModule):
             "neighbourhood_cleansed"
         ).has_low_future_availability.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings with low future availability',
+            ylabel='neighbourhood'
         ).get_figure().savefig(
             plot_path(
                 data.city, "listings_with_low_future_availability_vs_neighbourhood"
@@ -194,12 +201,18 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("neighbourhood_cleansed").has_no_recent_reviews.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings with no recent reviews',
+            ylabel='neighbourhood'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_no_recent_reviews_vs_neighbourhood")
         )
         plt.close()
         df.groupby("neighbourhood_cleansed").is_likely_to_cancel.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings likely to cancel',
+            ylabel='neighbourhood'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_neighbourhood")
         )
@@ -208,18 +221,27 @@ class StaleListings(BaseModule):
         # Plot the characteristics against room_type
         df.groupby("room_type").has_low_future_availability.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings with low future availability',
+            ylabel='room type'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_low_future_availability_vs_room_type")
         )
         plt.close()
         df.groupby("room_type").has_no_recent_reviews.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings with no recent reviews',
+            ylabel='room type'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_no_recent_reviews_vs_room_type")
         )
         plt.close()
         df.groupby("room_type").is_likely_to_cancel.mean().plot.barh(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings likely to cancel',
+            ylabel='room type'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_room_type")
         )
@@ -228,6 +250,9 @@ class StaleListings(BaseModule):
         # Plot the characteristics against instant_bookable
         df.groupby("instant_bookable").has_low_future_availability.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with low future availability',
+            xlabel='instant bookable'
         ).get_figure().savefig(
             plot_path(
                 data.city, "listings_with_low_future_availability_vs_instant_bookable"
@@ -236,12 +261,18 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("instant_bookable").has_no_recent_reviews.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with no recent reviews',
+            xlabel='instant bookable'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_no_recent_reviews_vs_instant_bookable")
         )
         plt.close()
         df.groupby("instant_bookable").is_likely_to_cancel.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings likely to cancel',
+            xlabel='instant bookable'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_instant_bookable")
         )
@@ -250,6 +281,9 @@ class StaleListings(BaseModule):
         # Plot the characteristics against accommodates
         df.groupby("accommodates").has_low_future_availability.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with low future availability',
+            xlabel='accommodates'
         ).get_figure().savefig(
             plot_path(
                 data.city, "listings_with_low_future_availability_vs_accommodates"
@@ -258,12 +292,18 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("accommodates").has_no_recent_reviews.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings with no recent reviews',
+            ylabel='accommodates'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_no_recent_reviews_vs_accommodates")
         )
         plt.close()
         df.groupby("accommodates").is_likely_to_cancel.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings likely to cancel',
+            ylabel='accommodates'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_accommodates")
         )
@@ -272,18 +312,27 @@ class StaleListings(BaseModule):
         # Plot the characteristics against bedrooms
         df.groupby("bedrooms").has_low_future_availability.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings with low future availability',
+            ylabel='bedrooms'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_low_future_availability_vs_bedrooms")
         )
         plt.close()
         df.groupby("bedrooms").has_no_recent_reviews.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with no recent reviews',
+            xlabel='bedrooms'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_no_recent_reviews_vs_bedrooms")
         )
         plt.close()
         df.groupby("bedrooms").is_likely_to_cancel.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings likely to cancel',
+            ylabel='bedrooms'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_bedrooms")
         )
@@ -292,18 +341,27 @@ class StaleListings(BaseModule):
         # Plot the characteristics against beds
         df.groupby("beds").has_low_future_availability.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with low future availability',
+            xlabel='beds'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_low_future_availability_vs_beds")
         )
         plt.close()
         df.groupby("beds").has_no_recent_reviews.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with no recent reviews',
+            xlabel='beds'
         ).get_figure().savefig(
             plot_path(data.city, "listings_with_no_recent_reviews_vs_beds")
         )
         plt.close()
         df.groupby("beds").is_likely_to_cancel.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings likely to cancel',
+            ylabel='beds'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_beds")
         )
@@ -312,6 +370,9 @@ class StaleListings(BaseModule):
         # Plot the characteristics against host_acceptance_rate
         df.groupby("host_acceptance_rate").has_low_future_availability.mean().plot.line(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with low future availability',
+            xlabel='host acceptance rate'
         ).get_figure().savefig(
             plot_path(
                 data.city,
@@ -321,6 +382,9 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("host_acceptance_rate").has_no_recent_reviews.mean().plot.line(
             figsize=(12, 8),
+            color='#FF5A60',
+            ylabel='listings with no recent reviews',
+            xlabel='host acceptance rate'
         ).get_figure().savefig(
             plot_path(
                 data.city, "listings_with_no_recent_reviews_vs_host_acceptance_rate"
@@ -329,6 +393,9 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("host_acceptance_rate").is_likely_to_cancel.mean().plot.line(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='listings likely to cancel',
+            ylabel='host acceptance rate'
         ).get_figure().savefig(
             plot_path(data.city, "listings_likely_to_cancel_vs_host_acceptance_rate")
         )
@@ -337,6 +404,9 @@ class StaleListings(BaseModule):
         # plot vs vacancy percent
         df.groupby("has_low_future_availability").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='low future availability',
+            ylabel='vacancy'
         ).get_figure().savefig(
             plot_path(
                 data.city,
@@ -346,6 +416,9 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("has_no_recent_reviews").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='no recent reviews',
+            ylabel='vacancy'
         ).get_figure().savefig(
             plot_path(
                 data.city,
@@ -355,6 +428,8 @@ class StaleListings(BaseModule):
         plt.close()
         df.groupby("is_likely_to_cancel").vacancy_percent.mean().plot.bar(
             figsize=(12, 8),
+            color='#FF5A60',
+            xlabel='mean cancellation chance'
         ).get_figure().savefig(
             plot_path(
                 data.city,

@@ -67,32 +67,44 @@ class ReviewSentiments(BaseModule):
         )
 
         # plot histogram
-        reviews["sentiment"].hist(bins=100, figsize=(10, 5)).get_figure().savefig(
+        reviews["sentiment"].hist(
+            bins=100,
+            figsize=(10, 5),
+            color='#FF5A60',
+        ).get_figure().savefig(
             plot_path(data.city, "review_sentiment_distribution")
         )
         plt.close()
 
         # plot sentiment vs price
         merged.plot.scatter(
-            x="price", y="sentiment", figsize=(10, 10), logx=True
+            x="price", y="sentiment", figsize=(10, 10), logx=True, color='#FF5A60',
+            xlabel='price',
+            ylabel='review sentiment',
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_price"))
         plt.close()
 
         # plot sentiment vs room type
         merged.groupby("room_type").sentiment.mean().plot.bar(
-            yerr=merged.groupby("room_type").sentiment.std(), capsize=4, rot=0
+            yerr=merged.groupby("room_type").sentiment.std(), capsize=4, rot=0, color='#FF5A60',
+            xlabel='room type',
+            ylabel='review sentiment',
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_room_type"))
         plt.close()
 
         # plot sentiment vs bedrooms
         merged.groupby("bedrooms").sentiment.mean().plot.bar(
-            yerr=merged.groupby("bedrooms").sentiment.std(), capsize=4, rot=0
+            yerr=merged.groupby("bedrooms").sentiment.std(), capsize=4, rot=0, color='#FF5A60',
+            xlabel='bedrooms',
+            ylabel='review sentiment',
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_bedrooms"))
         plt.close()
 
         # plot sentiment vs beds
         merged.groupby("beds").sentiment.mean().plot.bar(
-            yerr=merged.groupby("beds").sentiment.std(), capsize=4, rot=0
+            yerr=merged.groupby("beds").sentiment.std(), capsize=4, rot=0, color='#FF5A60',
+            xlabel='beds',
+            ylabel='review sentiment',
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_beds"))
         plt.close()
 
@@ -101,7 +113,10 @@ class ReviewSentiments(BaseModule):
             xerr=merged.groupby("neighbourhood_cleansed").sentiment.std(),
             capsize=4,
             rot=0,
+            color='#FF5A60',
             figsize=(12, 8),
+            ylabel='neighbourhood',
+            xlabel='review sentiment',
         ).get_figure().savefig(
             plot_path(data.city, "review_sentiment_vs_neighbourhood")
         )
@@ -109,7 +124,9 @@ class ReviewSentiments(BaseModule):
 
         # plot sentiment vs instant_bookable
         merged.groupby("instant_bookable").sentiment.mean().plot.bar(
-            yerr=merged.groupby("instant_bookable").sentiment.std(), capsize=4, rot=0
+            yerr=merged.groupby("instant_bookable").sentiment.std(), capsize=4, rot=0, color='#FF5A60',
+            xlabel='instant bookable',
+            ylabel='review sentiment',
         ).get_figure().savefig(
             plot_path(data.city, "review_sentiment_vs_instant_bookable")
         )
@@ -120,15 +137,21 @@ class ReviewSentiments(BaseModule):
             yerr=merged.groupby("accommodates").sentiment.std(),
             capsize=4,
             rot=0,
+            color='#FF5A60',
             figsize=(12, 5),
+            xlabel='accommodates',
+            ylabel='review sentiment',
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_accommodates"))
         plt.close()
 
         # plot sentiment vs min nights
         merged.groupby("minimum_nights").sentiment.mean().plot.line(
-            x="minimum_nights",
+            x="minimum nights",
             y="sentiment",
+            xlabel='minimum nights',
+            ylabel='sentiment',
             logx=True,
+            color='#FF5A60',
             figsize=(20, 10),
         ).get_figure().savefig(
             plot_path(data.city, "review_sentiment_vs_minimum_nights")
@@ -137,8 +160,11 @@ class ReviewSentiments(BaseModule):
 
         # plot sentiment vs host acceptance rate
         merged.groupby("host_acceptance_rate").sentiment.mean().plot.line(
-            x="host_acceptance_rate",
+            x="host acceptance rate",
             y="sentiment",
+            ylabel='review sentiment',
+            xlabel='host acceptance rate',
+            color='#FF5A60',
             figsize=(10, 5),
         ).get_figure().savefig(
             plot_path(data.city, "review_sentiment_vs_host_acceptance_rate")
@@ -160,6 +186,9 @@ class ReviewSentiments(BaseModule):
         merged.plot.scatter(
             x="vacancy_percent",
             y="sentiment",
+            xlabel='vacancy',
+            ylabel='sentiment',
+            color='#FF5A60',
             figsize=(10, 5),
             alpha=0.3,
         ).get_figure().savefig(plot_path(data.city, "review_sentiment_vs_vacancy"))
